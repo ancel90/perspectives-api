@@ -1,0 +1,13 @@
+{
+  "total_articles": 10,
+  "article1": {"titre": "Trump réélu : l'Amérique pivote", "lien": "article1.html", "contenu": "Donald Trump réélu 2024...", "image": "img1.jpg", "alaune": "oui"},
+  "article2": {"titre": "IA : l'Europe à la traîne", "lien": "article2.html", "contenu": "Bruxelles régule...", "image": "img2.jpg", "alaune": "non"},
+  "article3": {"titre": "CAC 40 : -15% en 2025", "lien": "article3.html", "contenu": "Bourse européenne en chute...", "image": "img3.jpg", "alaune": "oui"},
+  "article4": {"titre": "Énergie : EDF au bord du gouffre", "lien": "article4.html", "contenu": "Déficit nucléaire record...", "image": "img4.jpg", "alaune": "non"},
+  "article5": {"titre": "Immigration : +300k illégaux", "lien": "article5.html", "contenu": "Frontières européennes saturées...", "image": "img5.jpg", "alaune": "oui"},
+  "article6": {"titre": "Bitcoin : 150k$ fin 2025 ?", "lien": "article6.html", "contenu": "Crypto bullrun confirmé...", "image": "img6.jpg", "alaune": "non"},
+  "article7": {"titre": "Russie : reconquête Donbass", "lien": "article7.html", "contenu": "Moscou reprend l'avantage...", "image": "img7.jpg", "alaune": "oui"},
+  "article8": {"titre": "Chine : Taïwan 2026 ?", "lien": "article8.html", "contenu": "Pékin prépare invasion...", "image": "img8.jpg", "alaune": "non"},
+  "article9": {"titre": "Climat : canicule record été 2026", "lien": "article9.html", "contenu": "40°C Paris prévu...", "image": "img9.jpg", "alaune": "oui"},
+  "article10": {"titre": "5G : Huawei domine Europe", "lien": "article10.html", "contenu": "Sanctions US inefficaces...", "image": "img10.jpg", "alaune": "non"}
+}

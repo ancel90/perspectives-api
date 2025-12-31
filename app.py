@@ -1,54 +1,75 @@
-from flask import Flask, render_template, jsonify
-import sqlite3
+from flask import Flask, jsonify
+import json
 
 app = Flask(__name__)
 
-def get_db_connection():
-    conn = sqlite3.connect('articles.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
 @app.route("/")
 def home():
-    init_db()
-    return '''
-    <h1>Perspectives Actuelles - Jour 2</h1>
-    <p><a href="/articles">Articles JSON</a> | 
-    <a href="/users">Users JSON</a></p>
-    <p>SQLite DB OK ! Tables: articles(2) + users(2)</p>
+    try:
+        with open('articles.json', 'r') as f:
+            articles_data = json.load(f)
+    except:
+        articles_data = {"total_articles": 0}
+    
+    articles_list = ""
+    for key in articles_data:
+        if key.startswith("article"):
+            art = articles_data[key]
+            alaune = "🔥" if art.get("alaune") == "oui" else ""
+            articles_list += f'<div><h3>{alaune}<a href="/blog/{art["lien"]}">{art["titre"]}</a></h3><p>{art["contenu"][:100]}...</p></div><hr>'
+    
+    return f'''
+    <h1>Perspectives Actuelles</h1>
+    <p>Articles: {articles_data.get("total_articles", 0)} | 
+    <a href="/articles">JSON</a> | <a href="/users">Users</a></p>
+    <hr>
+    {articles_list}
     '''
 
 @app.route("/articles")
 def get_articles():
-    conn = get_db_connection()
-    articles = [{"id": row['id'], "title": row['title'], "content": row['content'], "date": row['date']} 
-                for row in conn.execute('SELECT * FROM articles').fetchall()]
-    conn.close()
-    return jsonify(articles)
+    try:
+        with open('articles.json', 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except:
+        return jsonify({"error": "articles.json manquant"})
 
 @app.route("/users")
 def get_users():
-    conn = get_db_connection()
-    users = [{"id": row['id'], "name": row['name'], "email": row['email'], "role": row['role']} 
-             for row in conn.execute('SELECT * FROM users').fetchall()]
-    conn.close()
-    return jsonify(users)
+    try:
+        with open('users.json', 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except:
+        return jsonify({"error": "users.json manquant"})
 
-def init_db():
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute('DROP TABLE IF EXISTS articles')
-    c.execute('DROP TABLE IF EXISTS users')
-    c.execute('''CREATE TABLE articles (id INTEGER PRIMARY KEY, title TEXT, content TEXT, date TEXT)''')
-    c.execute('''CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, role TEXT)''')
-    
-    c.execute("INSERT INTO articles VALUES (1, 'Article 111', 'Sprint 2 OK', '2025-12-28')")
-    c.execute("INSERT INTO articles VALUES (2, 'Article 112', 'IA APIs OK', '2025-12-28')")
-    c.execute("INSERT INTO users VALUES (1, 'David', 'david@example.com', 'admin')")
-    c.execute("INSERT INTO users VALUES (2, 'Test', 'test@example.com', 'user')")
-    
-    conn.commit()
-    conn.close()
+@app.route('/blog/<path:filename>')
+def serve_blog(filename):
+    try:
+        with open(f'blog/{filename}', 'r') as f:
+            return f.read()
+    except:
+        return "404 - Article non trouvé", 404
+
+@app.route('/blog/img/<path:filename>')
+def serve_img(filename):
+    try:
+        with open(f'blog/img/{filename}', 'rb') as f:
+            return f.read()
+    except:
+        return "Image non trouvée", 404
+
+@app.route("/a-la-une")
+def alaune():
+    try:
+        with open('articles.json', 'r') as f:
+            data = json.load(f)
+        une = {k:v for k,v in data.items() if k.startswith('article') and v.get('alaune')=='oui'}
+        return jsonify({"a_la_une": une})
+    except:
+        return jsonify({"error": "articles.json manquant"})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
