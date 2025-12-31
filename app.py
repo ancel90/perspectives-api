@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 import json
+import os
 
 app = Flask(__name__)
 
@@ -70,6 +71,7 @@ def alaune():
     except:
         return jsonify({"error": "articles.json manquant"})
 
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
 
-if __name__ == "__main__":
-    app.run(debug=True)
